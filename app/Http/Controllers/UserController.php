@@ -18,27 +18,41 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
         $user = User::find($request->get('username'));
-        if ( $user->password == sha1($request->get('password'))) {
-            $session = new Session();
-            $session->token = md5(microtime().$_SERVER['REMOTE_ADDR']);
-            $session->user_id = $user->id;
-            $session->is_expired = 0;
-            $session->save(); 
-            return view('session')->with($session->toArray());
-        } else {
-            return redirect('/api/user/login');
+        if($user == null) {
+            $error = 1;
+            $error_msg = "Login are incorrect. Please try again!";
+            return response()->json(['error' => $error, 'error_msg' => $error_msg]);
         }
+        else {
+            if ( $user->password == sha1($request->get('password'))) {
+                $error = 0;
+                $session = new Session();
+                $session->token = md5(microtime().$_SERVER['REMOTE_ADDR']);
+                $session->user_id = $user->id;
+                $session->is_expired = 0;
+                $session->save(); 
+                //return view('session')->with($session->toArray());
+                return response()->json(['error' => $error, 'token' => $session->token]);
+            } else {
+                //return redirect('/api/user/login');
+                $error = 1;
+                $error_msg = "Login are incorrect. Please try again!";
+                return response()->json(['error' => $error, 'error_msg' => $error_msg]);
+            }
+        }
+
         //return view('index')->with($user->toArray());
     }
 
     public function logout(Request $request)
     {
+        $error = 0;
+        $error_msg = "Logout completed";
         $session = Session::where('token', $request->get('token'))->first();
         $session->is_expired = 1;
         $session->save();
-        return view('logout');
+        return response()->json(['error' => $error, 'error_msg' => $error_msg]);
     }
 
     public function getLogout(Request $request)
@@ -71,14 +85,24 @@ class UserController extends Controller
 
     public function store(RegisterFormRequest $request)
     {
-        $user = new User();
-        $user->username = $request->get('username');
-        $user->password = sha1($request->get('password'));
-        $user->first_name = $request->get('first_name');
-        $user->last_name = $request->get('last_name');
-        $user->email = $request->get('email');
-        $user->save(); 
-        return redirect('/api/user/register');
+        $user_chk = User::find($request->get('username'));
+        if($user_chk != null) {
+            $error = 1;
+            $error_msg = "User already existed.";
+            return response()->json(['error' => $error, 'error_msg' => $error_msg]);
+        } else {
+            $error = 0;
+            $error_msg = "Registration completed.";
+            $user = new User();
+            $user->username = $request->get('username');
+            $user->password = sha1($request->get('password'));
+            $user->first_name = $request->get('first_name');
+            $user->last_name = $request->get('last_name');
+            $user->email = $request->get('email');
+            $user->save();
+            return response()->json(['error' => $error, 'error_msg' => $error_msg]);
+            //return redirect('/api/user/register');
+        }
     }
 
 
