@@ -45,3 +45,23 @@ Route::get('/api/user/logout',[
 ]);
 
 
+/////////////////////////////////////////////////////////////////
+Route::get('/api/post/shout',[
+	'as' => 'post_form',
+	'uses' => 'PostController@create'
+]);
+Route::post('/api/post/shout',[
+	'as' => 'post',
+	'uses' => 'PostController@store'
+]);
+Route::get('/api/post/home/{token}', [
+	'as' => 'home',
+	'uses' => 'PostController@index'
+]);
+Route::get('/api/post/location/{lat}/{long}', [
+	'as' => 'timeline',
+	'uses' => 'PostController@show'
+]);
+
+
+
