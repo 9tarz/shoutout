@@ -44,6 +44,10 @@ Route::get('/api/user/logout',[
 	'uses' => 'UserController@getLogout'
 ]);
 
+Route::get('/api/user/pull/{latitude}/{longitude}',[
+	'as' => 'pullLocation',
+	'uses' => 'UserController@pullLocation'
+]);
 
 /////////////////////////////////////////////////////////////////
 Route::get('/api/post/shout',[

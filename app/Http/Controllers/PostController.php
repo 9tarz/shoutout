@@ -81,9 +81,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($lat=null, $long=null)
+    public function show($latitude=null, $longitude =null)
     {
-        $posts = Post::where('latitude', $lat)->where('longitude', $long)->get();
+        $posts = Post::where('latitude', $latitude)->where('longitude', $longitude)->get();
         if ($posts == null) {
             $error = 1;
             $error_msg = "No post.";

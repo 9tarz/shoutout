@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterFormRequest;
 use App\User;
 use App\Session;
+use App\Post;
 
 class UserController extends Controller
 {
@@ -105,6 +106,22 @@ class UserController extends Controller
         }
     }
 
+    public function pullLocation($latitude = null, $longitude =null ){
+        $arr_posts = array();
+        $curr = pow(floatval($latitude),2) + pow(floatval($longitude),2) ;
+        $today = date('y-m-d');
+        $today_posts = Post::SELECT('latitude','longitude')->whereRaw('date(created_at) = :today' , ['today' => $today] )->distinct()->get();
+        foreach ($today_posts as $post) {
+            $lat = $post->latitude ;
+            $long = $post->longitude ;
+            $position = pow(floatval($lat),2) + pow(floatval($long),2);
+            if( abs(floatval($curr) -floatval($position)) <= 1.283671  ){
+                array_push($arr_posts, $post);
+                //echo json_encode(['latitude'=>$lat , 'longitude'=> $long]);
+            }
+        }
+        return response()->json(['posts' => $arr_posts]);
+    }
 
 
     /**
