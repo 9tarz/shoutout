@@ -115,7 +115,7 @@ class UserController extends Controller
             $long = $post->longitude ;
             $x = pow(abs($latitude-$lat),2) ;
             $y = pow(abs($longitude-$long),2) ;
-            if( abs(floatval($x) + floatval($y)) <= 0.000088076929 )
+            if( abs(floatval($x) + floatval($y)) <= 0.000088076929 ) {
                 array_push($arr_posts, $post);
             }
         }
