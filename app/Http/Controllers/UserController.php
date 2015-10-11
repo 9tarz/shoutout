@@ -120,7 +120,13 @@ class UserController extends Controller
                 //echo json_encode(['latitude'=>$lat , 'longitude'=> $long]);
             }
         }
-        return response()->json(['posts' => $arr_posts]);
+        if (count($arr_posts) == 0) {
+            $error = 1;
+            return response()->json(['error' => $error , 'posts' => $arr_posts]);
+        } else {
+            $error = 0;
+            return response()->json(['error' => $error ,'posts' => $arr_posts]);
+        }
     }
 
 
