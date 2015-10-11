@@ -108,16 +108,15 @@ class UserController extends Controller
 
     public function pullLocation($latitude = null, $longitude =null ){
         $arr_posts = array();
-        $curr = pow(floatval($latitude),2) + pow(floatval($longitude),2) ;
         $today = date('y-m-d');
         $today_posts = Post::SELECT('latitude','longitude')->whereRaw('date(created_at) = :today' , ['today' => $today] )->distinct()->get();
         foreach ($today_posts as $post) {
             $lat = $post->latitude ;
             $long = $post->longitude ;
-            $position = pow(floatval($lat),2) + pow(floatval($long),2);
-            if( abs(floatval($curr) -floatval($position)) <= 1.283671  ){
+            $x = pow(abs($latitude-$lat),2) ;
+            $y = pow(abs($longitude-$long),2) ;
+            if( abs(floatval($x) + floatval($y)) <= 0.000088076929 )
                 array_push($arr_posts, $post);
-                //echo json_encode(['latitude'=>$lat , 'longitude'=> $long]);
             }
         }
         if (count($arr_posts) == 0) {
