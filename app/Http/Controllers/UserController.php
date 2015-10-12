@@ -121,7 +121,8 @@ class UserController extends Controller
         }
         if (count($arr_posts) == 0) {
             $error = 1;
-            return response()->json(['error' => $error , 'posts' => $arr_posts]);
+            $error_msg ="Location Not Found.";
+            return response()->json(['error_msg' => $error_msg,'error' => $error , 'posts' => $arr_posts]);
         } else {
             $error = 0;
             return response()->json(['error' => $error ,'posts' => $arr_posts]);
