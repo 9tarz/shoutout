@@ -62,7 +62,7 @@ Route::get('/api/post/home/{token}', [
 	'as' => 'home',
 	'uses' => 'PostController@index'
 ]);
-Route::get('/api/post/location/{lat}/{long}', [
+Route::get('/api/post/location/{latitude}/{longitude}', [
 	'as' => 'timeline',
 	'uses' => 'PostController@show'
 ]);

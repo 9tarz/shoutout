@@ -84,9 +84,9 @@ class PostController extends Controller
     public function show($latitude=null, $longitude =null)
     {
         $posts = Post::where('latitude', $latitude)->where('longitude', $longitude)->get();
-        if ($posts == null) {
+        if (count($posts) == 0) {
             $error = 1;
-            $error_msg = "No post.";
+            $error_msg = "No posts.";
             return response()->json(['error' => $error, 'error_msg' => $error_msg]);
         } else {
             $error = 0;
