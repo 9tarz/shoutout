@@ -60,16 +60,16 @@ class PostController extends Controller
                 $error_msg = "Shout completed. :)";
                 $post = new Post();
                 $post->user_id = $session->user_id;
-                $post->text = $request->text;
-                $post->latitude = $request->latitude;
-                $post->longitude = $request->longitude;
-                $post->is_anonymous = $request->anonymous;
+                $post->text = $request->get('text');
+                $post->latitude = $request->get('latitude');
+                $post->longitude = $request->get('longitude');
+                $post->is_anonymous = $request->get('anonymous');
                 $post->save();
                 return response()->json(['error' => $error, 'error_msg' => $error_msg]);
             } else {
                 $error = 1;
                 $error_msg = "Your session has expired. Please Login again!";
-                return redirect('/api/user/login');
+                return response()->json(['error' => $error, 'error_msg' => $error_msg]);
             }
         }
         
@@ -83,15 +83,22 @@ class PostController extends Controller
      */
     public function show($latitude=null, $longitude =null)
     {
+        $arr_posts = array();
         $posts = Post::where('latitude', $latitude)->where('longitude', $longitude)->get();
-        if (count($posts) == 0) {
+        foreach ($posts as $post) {
+            $user_id = $post->user_id;
+            $user = User::where('id', $user_id)->first();
+            $post->username = $user->username;
+            array_push($arr_posts, $post);
+        }
+        if (count($arr_posts) == 0) {
             $error = 1;
             $error_msg = "No posts.";
             return response()->json(['error' => $error, 'error_msg' => $error_msg]);
         } else {
             $error = 0;
             $error_msg = "";
-            return response()->json(['error' => $error, 'posts' => $posts]);
+            return response()->json(['error' => $error, 'posts' => $arr_posts]);
         }
     }
 
