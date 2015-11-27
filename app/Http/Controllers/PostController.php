@@ -8,41 +8,24 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Post;
 use App\Session;
+use App\Photo;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
-    {
-        // map page: write as index.blade.php (edit later)
-
-        // $user = User::find($request->get('username'));
-        // $session = Session::find($user->id);
-        // if($session->is_expired == 0){
-        //     return view('map');
-        // }
-        // else{
-        //     return view('login');
-        // }
-    }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the create new post form for test
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
     {
         return view('post');
-        //
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created post in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -76,12 +59,13 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Show posts on timeline
      *
-     * @param  int  $id
+     * @param  int  $latitude 
+     * @param  int  $longitude
      * @return \Illuminate\Http\Response
      */
-    public function show($latitude=null, $longitude =null)
+    public function show($latitude=null, $longitude=null)
     {
         $arr_posts = array();
         $posts = Post::where('latitude', $latitude)->where('longitude', $longitude)->get();
@@ -103,42 +87,7 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-
-    /**
-     * Show upload form for test 
+     * Show the image upload form for test 
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -148,7 +97,12 @@ class PostController extends Controller
         return view('upload_image');
     }
 
-
+    /**
+     * upload image to imgur.com
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function upload_image(Request $request)
     {
         /*if (empty($request->get('clientid')) || $request->file('upload');$_FILES['upload']['error'] !== 0 || $_FILES['upload']['size'] > 5000000000) {
@@ -184,6 +138,12 @@ class PostController extends Controller
 
     }
 
+    /**
+     * test image info
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function show_upload_2(Request $request)
     {
 
