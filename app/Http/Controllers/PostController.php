@@ -135,4 +135,75 @@ class PostController extends Controller
     {
         //
     }
+
+
+    /**
+     * Show upload form for test 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show_upload(Request $request)
+    {
+        return view('upload_image');
+    }
+
+
+    public function upload_image(Request $request)
+    {
+        /*if (empty($request->get('clientid')) || $request->file('upload');$_FILES['upload']['error'] !== 0 || $_FILES['upload']['size'] > 5000000000) {
+            exit;
+        }*/
+        $error_msg = "";
+        $client_id = "68a375e185f3ffb";
+
+        if ($request->file('image') == null)
+            $error_msg = "null"; 
+
+        /*if ($input_image->getMimeType() != 'image') {
+            die('Invalid image type');
+        }*/
+
+        $image = file_get_contents($request->file('image')->getRealPath());
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $reply = curl_exec($ch);
+
+        curl_close($ch);
+
+        $reply = json_decode($reply);
+
+        return response()->json(['reply' => $reply, 'error_msg' => $error_msg]);
+
+    }
+
+    public function show_upload_2(Request $request)
+    {
+
+        $client_id = "68a375e185f3ffb";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.imgur.com/3/image/hfrUrec');
+        curl_setopt($ch, CURLOPT_POST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array( "Authorization: Client-ID $client_id" ));
+        //curl_setopt($ch, CURLOPT_POSTFIELDS, array( 'image' => base64_encode($image) ));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $reply = curl_exec($ch);
+
+        curl_close($ch);
+
+        $reply = json_decode($reply);
+        
+
+        return response()->json(['reply' => stripslashes($reply->data->link)]);
+    }
+
 }
