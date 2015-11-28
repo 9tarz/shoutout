@@ -66,20 +66,3 @@ Route::get('/api/post/location/{latitude}/{longitude}', [
 	'as' => 'timeline',
 	'uses' => 'PostController@show'
 ]);
-
-
-Route::get('/api/post/image/upload', [
-	'as' => 'show_upload',
-	'uses' => 'PostController@show_upload'
-]);
-
-
-Route::post('/api/post/image/upload', [
-	'as' => 'upload',
-	'uses' => 'PostController@upload_image'
-]);
-
-Route::get('/api/post/image', [
-	'as' => 'show_upload_2',
-	'uses' => 'PostController@show_upload_2'
-]);
