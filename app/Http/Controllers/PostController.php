@@ -68,7 +68,7 @@ class PostController extends Controller
                         $post->text = $request->get('text');
                         $post->latitude = $request->get('latitude');
                         $post->longitude = $request->get('longitude');
-                        //$post->is_anonymous = $request->get('anonymous');
+                        $post->is_anonymous = $request->get('anonymous');
                         $post->save();
 
                         // update post id of image.
@@ -82,7 +82,7 @@ class PostController extends Controller
                         $error_msg = $result->data->error; 
                     }
                 }
-                return response()->json(['error' => $error, 'error_msg' => $error_msg]);
+                return response()->json(['error' => $error, 'error_msg' => $error_msg, 'is_anonymous' => $post->is_anonymous]);
             } else {
                 $error = 1;
                 $error_msg = "Your session has expired. Please Login again!";
@@ -106,7 +106,12 @@ class PostController extends Controller
         foreach ($posts as $post) {
             $user_id = $post->user_id;
             $user = User::where('id', $user_id)->first();
-            $post->username = $user->username;
+            if($post->is_anonymous == 1){
+                $post->username = "Anonymous";
+            }
+            else{
+                $post->username = $user->username;
+            }
             array_push($arr_posts, $post);
         }
         if (count($arr_posts) == 0) {
