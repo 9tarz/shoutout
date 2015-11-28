@@ -109,7 +109,8 @@ class UserController extends Controller
     public function pullLocation($latitude = null, $longitude =null ){
         $arr_posts = array();
         $today = date('y-m-d');
-        $today_posts = Post::SELECT('latitude','longitude')->whereRaw('date(created_at) = :today' , ['today' => $today] )->distinct()->get();
+        //$today_posts = Post::SELECT('latitude','longitude')->whereRaw('date(created_at) = :today' , ['today' => $today] )->distinct()->get();
+        $today_posts = Post::SELECT('latitude','longitude')->get();
         foreach ($today_posts as $post) {
             $lat = $post->latitude ;
             $long = $post->longitude ;
