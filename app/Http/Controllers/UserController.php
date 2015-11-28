@@ -13,21 +13,27 @@ use App\Post;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Login function
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
+        // find user object by username.
         $user = User::find($request->get('username'));
+
+        // Is user exist in storage.
         if($user == null) {
             $error = 1;
             $error_msg = "Login are incorrect. Please try again!";
             return response()->json(['error' => $error, 'error_msg' => $error_msg]);
         }
         else {
+            // Check password 
             if ( $user->password == sha1($request->get('password'))) {
                 $error = 0;
+                // generate session token 
                 $session = new Session();
                 $session->token = md5(microtime().$_SERVER['REMOTE_ADDR']);
                 $session->user_id = $user->id;
@@ -36,7 +42,6 @@ class UserController extends Controller
                 //return view('session')->with($session->toArray());
                 return response()->json(['error' => $error, 'token' => $session->token]);
             } else {
-                //return redirect('/api/user/login');
                 $error = 1;
                 $error_msg = "Login are incorrect. Please try again!";
                 return response()->json(['error' => $error, 'error_msg' => $error_msg]);
@@ -46,6 +51,12 @@ class UserController extends Controller
         //return view('index')->with($user->toArray());
     }
 
+    /**
+     * Logout function
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function logout(Request $request)
     {
         $error = 0;
@@ -56,21 +67,33 @@ class UserController extends Controller
         return response()->json(['error' => $error, 'error_msg' => $error_msg]);
     }
 
+    /**
+     * Test logout form
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\Factory
+     */
     public function getLogout(Request $request)
     {
         return view('logout');
     }
 
-
+    /**
+     * Test login form
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\Factory
+     */
     public function getLogin(Request $request)
     {
         return view('login');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Test register form
      *
-     * @return \Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\View\Factory
      */
     public function create(Request $request)
     {
@@ -78,7 +101,7 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -102,9 +125,15 @@ class UserController extends Controller
             $user->email = $request->get('email');
             $user->save();
             return response()->json(['error' => $error, 'error_msg' => $error_msg]);
-            //return redirect('/api/user/register');
         }
     }
+
+    /**
+     * Show locations around specific location.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
 
     public function pullLocation($latitude = null, $longitude =null ){
         $arr_posts = array();
@@ -128,51 +157,5 @@ class UserController extends Controller
             $error = 0;
             return response()->json(['error' => $error ,'posts' => $arr_posts]);
         }
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
