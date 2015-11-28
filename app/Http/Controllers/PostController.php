@@ -105,6 +105,9 @@ class PostController extends Controller
         $posts = Post::where('latitude', $latitude)->where('longitude', $longitude)->get();
         foreach ($posts as $post) {
             $user_id = $post->user_id;
+            $image = Image::where('post_id', $post->id)->first();
+
+            $post->image_url = $image['imgur_url'];
             $user = User::where('id', $user_id)->first();
             if($post->is_anonymous == 1){
                 $post->username = "Anonymous";
