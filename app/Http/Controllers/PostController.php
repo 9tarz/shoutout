@@ -41,11 +41,24 @@ class PostController extends Controller
         } else {
             // check user token isn't expired.
             if($session->is_expired == 0){
+                $post_is_anonymous = "";
                 $error = 0;
+                // post with out image
                 if ($request->file('image') == null || $request->file('image')->getClientSize() <= 0) {
-                    $error = 1;
-                    $error_msg = "Image not found! ";
+                    
+                    // store the text post.
+                    $post = new Post();
+                    $post->user_id = $session->user_id;
+                    $post->text = $request->get('text');
+                    $post->latitude = $request->get('latitude');
+                    $post->longitude = $request->get('longitude');
+                    $post->is_anonymous = $request->get('anonymous');
+                    $post_is_anonymous = $post->is_anonymous;
+                    $post->save();
+
+                    $error_msg = "Shout completed. :)";
                 }
+                // post with image
                 else {
                     // upload image to imgur.com
                     $result = $this->upload_image($request->file('image'));
@@ -69,6 +82,7 @@ class PostController extends Controller
                         $post->latitude = $request->get('latitude');
                         $post->longitude = $request->get('longitude');
                         $post->is_anonymous = $request->get('anonymous');
+                        $post_is_anonymous = $post->is_anonymous;
                         $post->save();
 
                         // update post id of image.
@@ -82,7 +96,7 @@ class PostController extends Controller
                         $error_msg = $result->data->error; 
                     }
                 }
-                return response()->json(['error' => $error, 'error_msg' => $error_msg, 'is_anonymous' => $post->is_anonymous]);
+                return response()->json(['error' => $error, 'error_msg' => $error_msg, 'is_anonymous' => $post_is_anonymous]);
             } else {
                 $error = 1;
                 $error_msg = "Your session has expired. Please Login again!";
