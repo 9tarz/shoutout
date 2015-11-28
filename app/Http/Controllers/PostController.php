@@ -46,7 +46,7 @@ class PostController extends Controller
                 $post->text = $request->get('text');
                 $post->latitude = $request->get('latitude');
                 $post->longitude = $request->get('longitude');
-                //$post->is_anonymous = $request->get('anonymous');
+                $post->is_anonymous = $request->get('anonymous');
                 $post->save();
                 return response()->json(['error' => $error, 'error_msg' => $error_msg]);
             } else {
@@ -72,7 +72,12 @@ class PostController extends Controller
         foreach ($posts as $post) {
             $user_id = $post->user_id;
             $user = User::where('id', $user_id)->first();
-            $post->username = $user->username;
+            if($post->is_anonymous == 1){
+                $post->username = "Anonymous";
+            }
+            else{
+                $post->username = $user->username;
+            }
             array_push($arr_posts, $post);
         }
         if (count($arr_posts) == 0) {
