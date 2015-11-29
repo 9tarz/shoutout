@@ -52,7 +52,7 @@ class PostController extends Controller
                     $post->text = $request->get('text');
                     $post->latitude = $request->get('latitude');
                     $post->longitude = $request->get('longitude');
-                    $post->is_anonymous = $request->get('anonymous');
+                    $post->is_anonymous = $request->get('is_anonymous');
                     $post_is_anonymous = $post->is_anonymous;
                     $post->save();
 
@@ -81,7 +81,7 @@ class PostController extends Controller
                         $post->text = $request->get('text');
                         $post->latitude = $request->get('latitude');
                         $post->longitude = $request->get('longitude');
-                        $post->is_anonymous = $request->get('anonymous');
+                        $post->is_anonymous = $request->get('is_sanonymous');
                         $post_is_anonymous = $post->is_anonymous;
                         $post->save();
 
