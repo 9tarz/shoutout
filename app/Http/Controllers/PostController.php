@@ -45,7 +45,6 @@ class PostController extends Controller
                 $error = 0;
                 // post with out image
                 if ($request->file('image') == null || $request->file('image')->getClientSize() <= 0) {
-                    
                     // store the text post.
                     $post = new Post();
                     $post->user_id = $session->user_id;
@@ -81,7 +80,7 @@ class PostController extends Controller
                         $post->text = $request->get('text');
                         $post->latitude = $request->get('latitude');
                         $post->longitude = $request->get('longitude');
-                        $post->is_anonymous = $request->get('is_sanonymous');
+                        $post->is_anonymous = $request->get('is_anonymous');
                         $post_is_anonymous = $post->is_anonymous;
                         $post->save();
 

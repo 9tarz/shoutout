@@ -49,6 +49,11 @@ Route::get('/api/user/pull/{latitude}/{longitude}',[
 	'uses' => 'UserController@pullLocation'
 ]);
 
+Route::get('/api/user/profile/{token}',[
+ 	'as' => 'profile',
+ 	'uses' => 'UserController@show'
+ ]);
+
 /////////////////////////////////////////////////////////////////
 Route::get('/api/post/shout',[
 	'as' => 'post_form',
