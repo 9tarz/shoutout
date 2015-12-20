@@ -129,16 +129,25 @@ class UserController extends Controller
         }
     }
 
-
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($token)
     {
-        //
+        $session = Session::find($token);
+        if($session->is_expired == 1) {
+            $error = 1;
+            $error_msg = "Login are incorrect. Please try again!";
+            return response()->json(['error' => $error, 'error_msg' => $error_msg]);
+        }
+        else {
+            $user = User::where('id', $session->user_id)->first();
+            //return view('session')->with('user');
+            return response()->json(['username' => $user->username, 'firstname' => $user->first_name, 'lastname' => $user->last_name, 'email' => $user->email]);
+        }
     }
 
     /**
